@@ -70,7 +70,7 @@ class Snake:
 class Juego:
 	def __init__(self):
 		self.snake = Snake()
-		self.food = Food(self.snake.body)
+		self.food = Comida(self.snake.body)
 		self.state = "RUNNING"
 		self.score = 0
 
@@ -81,18 +81,18 @@ class Juego:
 	def update(self):
 		if self.state == "RUNNING":
 			self.snake.update()
-			self.check_collision_with_food()
-			self.check_collision_with_edges()
-			self.check_collision_with_tail()
+			self.check_collision_with_Comida()
+			self.check_collision_with_Bordes()
+			self.check_collision_with_Cola()
 
-	def check_collision_with_food(self):
+	def check_collision_with_Comida(self):
 		if self.snake.body[0] == self.food.position:
-			self.food.position = self.food.generate_random_pos(self.snake.body)
+			self.comida.position = self.comida.generate_random_pos(self.snake.body)
 			self.snake.add_segment = True
 			self.score += 1
-			self.snake.eat_sound.play()
+			
 
-	def check_collision_with_edges(self):
+	def check_collision_with_Bordes(self):
 		if self.snake.body[0].x == number_of_cells or self.snake.body[0].x == -1:
 			self.game_over()
 		if self.snake.body[0].y == number_of_cells or self.snake.body[0].y == -1:
@@ -100,10 +100,10 @@ class Juego:
 
 	def game_over(self):
 		self.snake.reset()
-		self.food.position = self.food.generate_random_pos(self.snake.body)
+		self.comida.position = self.comida.generate_random_pos(self.snake.body)
 		self.state = "STOPPED"
 		self.score = 0
-		self.snake.wall_hit_sound.play()
+		
 
 	def check_collision_with_tail(self):
 		headless_body = self.snake.body[1:]
