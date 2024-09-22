@@ -109,3 +109,47 @@ class Juego:
 		headless_body = self.snake.body[1:]
 		if self.snake.body[0] in headless_body:
 			self.game_over()
+screen = pygame.display.set_mode((2*OFFSET + cell_size*number_of_cells, 2*OFFSET + cell_size*number_of_cells))
+
+pygame.display.set_caption("Retro Snake")
+
+clock = pygame.time.Clock()
+
+juego = Juego()
+food_surface = pygame.image.load("food.png")
+
+SNAKE_UPDATE = pygame.USEREVENT
+pygame.time.set_timer(SNAKE_UPDATE, 200)
+
+while True:
+	for event in pygame.event.get():
+		if event.type == SNAKE_UPDATE:
+			juego.update()
+		if event.type == pygame.QUIT:
+			pygame.quit()
+			sys.exit()
+
+		if event.type == pygame.KEYDOWN:
+			if juego.state == "STOPPED":
+				juego.state = "RUNNING"
+			if event.key == pygame.K_UP and juego.snake.direction != Vector2(0, 1):
+				juego.snake.direction = Vector2(0, -1)
+			if event.key == pygame.K_DOWN and juego.snake.direction != Vector2(0, -1):
+				juego.snake.direction = Vector2(0, 1)
+			if event.key == pygame.K_LEFT and juego.snake.direction != Vector2(1, 0):
+				juego.snake.direction = Vector2(-1, 0)
+			if event.key == pygame.K_RIGHT and juego.snake.direction != Vector2(-1, 0):
+				juego.snake.direction = Vector2(1, 0)
+
+	#Graficador
+	screen.fill(GREEN)
+	pygame.draw.rect(screen, DARK_GREEN,
+		(OFFSET-5, OFFSET-5, cell_size*number_of_cells+10, cell_size*number_of_cells+10), 5)
+	juego.draw()
+	title_surface = title_font.render("Retro Snake", True, DARK_GREEN)
+	score_surface = score_font.render(str(juego.score), True, DARK_GREEN)
+	screen.blit(title_surface, (OFFSET-5, 20))
+	screen.blit(score_surface, (OFFSET-5, OFFSET + cell_size*number_of_cells +10))
+
+	pygame.display.update()
+	clock.tick(60)
